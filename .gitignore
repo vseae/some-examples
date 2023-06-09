@@ -1,0 +1,17 @@
+node_modules
+build
+coverage
+coverage.json
+dist
+typechain-types
+# Compiler files
+out
+cache_forge
+# Ignores development broadcast logs
+broadcast
+deployments
+# Docs
+docs/
+
+# Dotenv file
+.env
