@@ -2,6 +2,7 @@
 pragma solidity ^0.8.0;
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {MerkleProof} from "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
+import {BitMaps} from "@openzeppelin/contracts/utils/structs/BitMaps.sol";
 
 contract MerkleAirDrop20 {
     // 分发代币
@@ -9,7 +10,8 @@ contract MerkleAirDrop20 {
     // 默克尔树根节点
     bytes32 public immutable merkleRoot;
     // 是否claim过
-    mapping(address => bool) public isClaimed;
+    using BitMaps for BitMaps.BitMap;
+    BitMaps.BitMap private isClaimed;
     uint256 public constant LIMIT = 5;
 
     constructor(address token_, bytes32 merkleRoot_) {
@@ -17,15 +19,15 @@ contract MerkleAirDrop20 {
         merkleRoot = merkleRoot_;
     }
 
-    function claim(address account, uint256 amount, bytes32[] calldata merkleProof) external {
+    function claim(uint256 index, address account, uint256 amount, bytes32[] calldata merkleProof) external {
         require(amount <= LIMIT, "Exceeds limit.");
-        require(!isClaimed[account], "Already claimed.");
+        require(!isClaimed.get(index), "Already claimed.");
         // 拼接出一个树节点
-        bytes32 node = keccak256(abi.encodePacked(account, amount));
+        bytes32 node = keccak256(abi.encodePacked(index, account, amount));
         // 校验proof，根据树节点，根节点和证明，验证是否是有效的证明
         bool isValidProof = MerkleProof.verifyCalldata(merkleProof, merkleRoot, node);
         require(isValidProof, "Invalid proof.");
-        isClaimed[account] = true;
+        isClaimed.set(index);
         require(IERC20(token).transfer(account, amount), "Transfer failed.");
     }
 }
