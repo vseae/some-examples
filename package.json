@@ -69,6 +69,7 @@
   },
   "dependencies": {
     "@openzeppelin/contracts": "^4.9.2",
-    "@openzeppelin/contracts-upgradeable": "^4.9.2"
+    "@openzeppelin/contracts-upgradeable": "^4.9.2",
+    "@openzeppelin/merkle-tree": "^1.0.5"
   }
 }
