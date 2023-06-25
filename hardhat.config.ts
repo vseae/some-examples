@@ -1,12 +1,7 @@
 import { HttpNetworkUserConfig, HardhatUserConfig } from "hardhat/types";
 import "hardhat-deploy";
-import "@nomicfoundation/hardhat-toolbox";
 import "@nomicfoundation/hardhat-foundry";
-import "hardhat-contract-sizer";
 import "hardhat-abi-exporter";
-import "hardhat-tracer";
-import "hardhat-storage-layout";
-import "hardhat-gas-reporter";
 import dotenv from "dotenv";
 import yargs from "yargs";
 import "./scripts/tasks/deploy-verify";
