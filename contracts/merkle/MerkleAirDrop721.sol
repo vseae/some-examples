@@ -19,8 +19,9 @@ contract MerkleAirDrop721 is ERC721 {
         _mint(to, amount);
     }
 
+    // avoid second preimage attacks.
     function _verifyClaim(address account, uint256 amount, bytes32[] calldata merkleProof) internal view returns (bool) {
-        bytes32 node = keccak256(abi.encodePacked(account, amount));
-        return MerkleProof.verifyCalldata(merkleProof, merkleRoot, node);
+        bytes32 leaf = keccak256(bytes.concat(keccak256(abi.encode(account, amount))));
+        return MerkleProof.verifyCalldata(merkleProof, merkleRoot, leaf);
     }
 }
