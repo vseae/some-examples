@@ -1,7 +1,7 @@
 import { StandardMerkleTree } from "@openzeppelin/merkle-tree";
-import fs from "fs";
+import * as fs from "fs";
 
-import readline from "readline";
+import * as readline from "readline";
 
 // read csv file and return array of array
 async function readCSVToArray(file_path: string): Promise<string[][]> {
