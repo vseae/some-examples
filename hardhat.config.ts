@@ -45,7 +45,7 @@ const config: HardhatUserConfig = {
     sources: "contracts",
   },
   solidity: {
-    version: "0.8.20",
+    version: "0.8.19",
     settings: {
       optimizer: {
         enabled: true,
@@ -123,6 +123,15 @@ const config: HardhatUserConfig = {
   },
   mocha: {
     timeout: 20000000,
+  },
+  deterministicDeployment: {
+    "11155111": {
+      factory: "0x914d7Fec6aaC8cd542e72Bca78B30650d45643d7",
+      deployer: "0xE1CB04A0fA36DdD16a06ea828007E35e1a3cBC37",
+      funding: "10000000000000000",
+      signedTx:
+        "0xf8a98085174876e800830186a08080b853604580600e600039806000f350fe7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe03601600081602082378035828234f58015156039578182fd5b8082525050506014600cf38401546d71a0d44a4cabccdad4ddfe22d499326d14b70841c51344d42e4bb2bea361a32c0145a02624a8b59c8af43360245d71fcaa7cea2bf1c74b3fad101c6c2ce3e21daedaf9",
+    },
   },
 };
 if (NODE_URL) {
