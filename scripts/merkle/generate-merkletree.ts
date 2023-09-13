@@ -38,6 +38,7 @@ async function main() {
   for (const [i, v] of tree.entries()) {
     const proof = tree.getProof(i);
     const root = tree.root;
+    // console.log("Tree:", tree);
     console.log("Index:", i);
     console.log("Value:", v);
     console.log("Proof:", proof);

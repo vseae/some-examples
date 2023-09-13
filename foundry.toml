@@ -8,7 +8,8 @@ test = 'test/foundry'
 solc_version = "0.8.19"
 optimizer = true
 optimizer_runs = 10000
-
+build_info = true
+extra_output = ["storageLayout"]
 [rpc_endpoints]
 goerli = "${GOERLI_RPC_URL}"
 local = "http://127.0.0.1:8545"
@@ -17,3 +18,7 @@ sepolia = "${SEPOLIA_RPC_URL}"
 
 [etherscan]
 # See more config options https://github.com/foundry-rs/foundry/tree/master/config
+sepolia = { key = "${ETHERSCAN_API_KEY}" }
+goerli = { key = "${ETHERSCAN_API_KEY}" }
+mumbai = { key = "${MUMBAI_SCAN_API_KEY}" }
+fantom_testnet = { key = "${FANTOMTEST_SCAN_API_KEY}" }

@@ -1,11 +1,25 @@
 import { HttpNetworkUserConfig, HardhatUserConfig } from "hardhat/types";
-import "hardhat-deploy";
-import "@nomicfoundation/hardhat-foundry";
-import "hardhat-abi-exporter";
 import dotenv from "dotenv";
 import yargs from "yargs";
+// tasks
 import "./scripts/tasks/deploy-verify";
 
+// hardhat-deploy
+import "hardhat-deploy";
+import "@nomiclabs/hardhat-ethers";
+// hardhat-plugins
+import "@nomicfoundation/hardhat-foundry";
+import "@nomicfoundation/hardhat-ethers";
+import "@nomicfoundation/hardhat-chai-matchers";
+import "@nomicfoundation/hardhat-network-helpers";
+import "@nomicfoundation/hardhat-verify";
+import "@typechain/hardhat";
+import "hardhat-gas-reporter";
+import "solidity-coverage";
+import "hardhat-abi-exporter";
+import "hardhat-storage-layout-changes";
+import "@openzeppelin/hardhat-upgrades";
+import "hardhat-contract-sizer";
 //load environment variables from .env file
 dotenv.config();
 const { NODE_URL, INFURA_KEY, MNEMONIC, ETHERSCAN_API_KEY } = process.env;
@@ -27,7 +41,7 @@ if (PK) {
   };
 }
 if (
-  ["mainnet", "rinkeby", "goerli"].includes(argv.network) &&
+  ["mainnet", "sepolia", "goerli"].includes(argv.network) &&
   INFURA_KEY === undefined
 ) {
   throw new Error(
@@ -43,6 +57,7 @@ const config: HardhatUserConfig = {
     tests: "test",
     deploy: "deploy",
     sources: "contracts",
+    storageLayouts: "storageLayout",
   },
   solidity: {
     version: "0.8.19",
@@ -89,7 +104,7 @@ const config: HardhatUserConfig = {
     mumbai: {
       ...userNetworkConfig,
       chainId: 80001,
-      url: `https://polygon-testnet.public.blastapi.io`,
+      url: `https://polygon-mumbai.infura.io/v3/${INFURA_KEY}`,
     },
   },
   namedAccounts: {
@@ -110,17 +125,6 @@ const config: HardhatUserConfig = {
     spacing: 2,
     pretty: true,
   },
-  contractSizer: {
-    alphaSort: true,
-    disambiguatePaths: false,
-    runOnCompile: false,
-    strict: true,
-  },
-  gasReporter: {
-    enabled: false,
-    currency: "USD",
-    gasPrice: 21,
-  },
   mocha: {
     timeout: 20000000,
   },
@@ -132,6 +136,16 @@ const config: HardhatUserConfig = {
       signedTx:
         "0xf8a98085174876e800830186a08080b853604580600e600039806000f350fe7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe03601600081602082378035828234f58015156039578182fd5b8082525050506014600cf38401546d71a0d44a4cabccdad4ddfe22d499326d14b70841c51344d42e4bb2bea361a32c0145a02624a8b59c8af43360245d71fcaa7cea2bf1c74b3fad101c6c2ce3e21daedaf9",
     },
+  },
+  contractSizer: {
+    alphaSort: true,
+    disambiguatePaths: false,
+    runOnCompile: true,
+    strict: true,
+  },
+  tenderly: {
+    project: "Project",
+    username: "7Levy",
   },
 };
 if (NODE_URL) {
