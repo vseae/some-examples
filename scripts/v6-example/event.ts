@@ -1,6 +1,6 @@
 import { EventLog, ethers } from "ethers";
 import { wallet, provider, wsProvider } from "./constants";
-import DemoJson from "../build/artifacts/contracts/Demo.sol/Demo.json";
+import DemoJson from "../../build/artifacts/contracts/Demo.sol/Demo.json";
 const main = async () => {
   const contract = new ethers.Contract(
     "0x17bb37E2c6b45087E12424D642eBfD9be4483F52",

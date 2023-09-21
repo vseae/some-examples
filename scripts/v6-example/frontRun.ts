@@ -1,14 +1,13 @@
 import { ethers } from "ethers";
 
-import { provider, wallet } from "./constants";
+import { wsProvider, wallet, provider } from "./constants";
 import FrontRunMintJson from "../build/artifacts/contracts/FrontRunMint.sol/FrontRunMint.json";
 const main = async () => {
   const iface = new ethers.Interface(FrontRunMintJson.abi);
-
-  provider.on("pending", async (txHash) => {
+  wsProvider.on("pending", async (txHash) => {
     if (txHash) {
       // 获取tx详情
-      const tx = await provider.getTransaction(txHash);
+      const tx = await wsProvider.getTransaction(txHash);
       if (tx) {
         // filter pendingTx.data
         if (
