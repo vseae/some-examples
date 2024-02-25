@@ -4,9 +4,12 @@ coverage
 coverage.json
 dist
 typechain-types
+.DS_Store
 # Compiler files
 out
-cache_forge
+forge
+storageLayout
+.openzeppelin
 # Ignores development broadcast logs
 broadcast
 deployments

@@ -1,9 +1,10 @@
 {
   "compilerOptions": {
-    "target": "es2015",
+    "target": "es2020",
     "module": "commonjs",
     "lib": ["ES2015"],
     "allowJs": false,
+
     "declaration": true,
     "sourceMap": false,
     "outDir": "./dist",
@@ -18,6 +19,12 @@
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true
   },
-  "include": ["./hardhat.config.ts", "./scripts", "./deploy", "./test"],
+  "include": [
+    "./hardhat.config.ts",
+    "./scripts",
+    "./deploy",
+    "./test",
+    "./typechain-types"
+  ],
   "exclude": ["dist", "node_modules"]
 }

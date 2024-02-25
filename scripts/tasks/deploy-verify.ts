@@ -1,5 +1,5 @@
 import "hardhat-deploy";
-import "@nomiclabs/hardhat-ethers";
+import "@nomicfoundation/hardhat-ethers";
 import { task } from "hardhat/config";
 
 task("deploy-verify", "Deploys and verifies Safe contracts").setAction(

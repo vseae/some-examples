@@ -6,7 +6,6 @@ import "./scripts/tasks/deploy-verify";
 
 // hardhat-deploy
 import "hardhat-deploy";
-import "@nomiclabs/hardhat-ethers";
 // hardhat-plugins
 import "@nomicfoundation/hardhat-foundry";
 import "@nomicfoundation/hardhat-ethers";
@@ -18,12 +17,12 @@ import "hardhat-gas-reporter";
 import "solidity-coverage";
 import "hardhat-abi-exporter";
 import "hardhat-storage-layout-changes";
-import "@openzeppelin/hardhat-upgrades";
 import "hardhat-contract-sizer";
 //load environment variables from .env file
 dotenv.config();
 const { NODE_URL, INFURA_KEY, MNEMONIC, ETHERSCAN_API_KEY } = process.env;
 const PK = process.env.PK?.split(",");
+// default network hardhat node
 const argv = yargs
   .option("network", {
     type: "string",
@@ -31,45 +30,46 @@ const argv = yargs
   })
   .help(false)
   .version(false).argv;
-const DEFAULT_MNEMONIC = "";
 const userNetworkConfig: HttpNetworkUserConfig = {};
+// set wallets
 if (PK) {
   userNetworkConfig.accounts = PK;
-} else {
+} else if (MNEMONIC) {
   userNetworkConfig.accounts = {
-    mnemonic: MNEMONIC || DEFAULT_MNEMONIC,
+    mnemonic: MNEMONIC ,
   };
+} else {
+  throw new Error('please set your PK or MNEMONIC in a .env file or as an environment variable.');
 }
-if (
-  ["mainnet", "sepolia", "goerli"].includes(argv.network) &&
-  INFURA_KEY === undefined
-) {
-  throw new Error(
-    `Could not find Infura key in env, unable to connect to network ${argv.network}`
-  );
-}
+// if network is mainnet or sepolia, check for infura key
+(async () => {
+  const resolvedArgv = await argv;
+  if (
+    ["mainnet", "sepolia"].includes(resolvedArgv.network) &&
+    INFURA_KEY === undefined
+  ) {
+    throw new Error(
+      `Could not find Infura key in env, unable to connect to network ${resolvedArgv.network}`
+    );
+  }
+})();
 
 // hardhat config
 const config: HardhatUserConfig = {
   paths: {
     artifacts: "build/artifacts",
     cache: "build/cache",
-    tests: "test",
+    tests: "test/hardhat",
     deploy: "deploy",
     sources: "contracts",
     storageLayouts: "storageLayout",
   },
   solidity: {
-    version: "0.8.19",
+    version: "0.8.24",
     settings: {
       optimizer: {
         enabled: true,
         runs: 10000,
-      },
-      outputSelection: {
-        "*": {
-          "*": ["storageLayout"],
-        },
       },
     },
   },
@@ -88,29 +88,32 @@ const config: HardhatUserConfig = {
       ...userNetworkConfig,
       chainId: 5,
       url: `https://goerli.infura.io/v3/${INFURA_KEY}`,
-      // gas: 10000000,
-      // gasPrice: 1e8,
     },
     sepolia: {
       ...userNetworkConfig,
       chainId: 11155111,
       url: `https://sepolia.infura.io/v3/${INFURA_KEY}`,
     },
-    fantomTest: {
+    arbitrum_sepolia: {
+      ...userNetworkConfig,
+      chainId: 421614,
+      url: `https://arbitrum-sepolia.blockpi.network/v1/rpc/public`,
+    },
+    fantom_testnet: {
       ...userNetworkConfig,
       chainId: 4002,
       url: `https://fantom-testnet.public.blastapi.io`,
     },
-    mumbai: {
+    polygon_mumbai: {
       ...userNetworkConfig,
       chainId: 80001,
-      url: `https://polygon-mumbai.infura.io/v3/${INFURA_KEY}`,
+      url: `https://polygon-testnet.public.blastapi.io`,
     },
   },
   namedAccounts: {
     deployer: 0,
-    bob: 1,
-    alice: 2,
+    alice: 1,
+    bob: 2,
   },
   verify: {
     etherscan: {
@@ -140,13 +143,12 @@ const config: HardhatUserConfig = {
   contractSizer: {
     alphaSort: true,
     disambiguatePaths: false,
-    runOnCompile: true,
+    runOnCompile: false,
     strict: true,
   },
-  tenderly: {
-    project: "Project",
-    username: "7Levy",
-  },
+  gasReporter:{
+   enabled: true,
+  }
 };
 if (NODE_URL) {
   config.networks!.custom = {
